@@ -144,6 +144,12 @@ input:focus {
 	text-align: right;
 }
 
+body > p {
+	max-width: 800px;
+	margin: auto;
+	margin-bottom: 20px;
+}
+
 #rocket-link,
 #monitor-link {
 	cursor: pointer;
