@@ -1,0 +1,171 @@
+.lottie {
+	width: 90%;
+	max-width: 400px;
+	margin: 0 auto;
+	cursor: pointer;
+	text-align: center;
+}
+
+body {
+	background-color: #1e1d32;
+	color: #d1d1d5;
+	margin: auto;
+	width: 90%;
+	padding: 10px;
+	text-align: center;
+	font-family: Roboto;
+}
+
+table {
+	width: 80%;
+	margin: 0 auto;
+}
+
+h1 {
+	color: #e55274;
+	font-size: 50px;
+}
+
+#curFrame,
+#totFrame,
+#curSegment {
+	color: #e55274;
+}
+
+h2 {
+	color: #4896c0;
+	font-size: 40px;
+}
+
+h3 {
+	font-size: 30px;
+}
+
+.progbar {
+	width: 80%;
+	height: 30px;
+	background-color: #d1d1d5;
+	margin: 0 auto;
+}
+
+.gapbar {
+	width: 80%;
+	height: 10px;
+	background-color: #1e1d32;
+	margin: 0 auto;
+}
+
+.progbarcomplete {
+	line-height: 30px;
+	height: 100%;
+	width: 0%;
+	display: block;
+	font-family: arial;
+	font-size: 12px;
+	background-color: transparent;
+	border-right: solid 3px #1e1d32;
+}
+
+.segprogbar {
+	width: 80%;
+	height: 15px;
+	background-color: #d1d1d5;
+	margin: 0 auto;
+	margin-top: 0px;
+}
+
+.segmentprogbarcomplete {
+	line-height: 15px;
+	height: 100%;
+	display: inline-block;
+	text-align: left;
+	font-family: arial;
+	font-size: 12px;
+	color: #fff;
+}
+
+input {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	width: 80px;
+	background: #3e3a66;
+	font-family: Roboto;
+	font-size: 30px;
+	color: #d1d1d5;
+	border-radius: 3px;
+	text-align: center;
+}
+input:focus {
+	outline: none;
+	background: #4e4980;
+}
+
+.color-guide {
+	display: flex;
+	justify-content: space-between;
+	max-width: 400px;
+	min-width: 200px;
+	margin: 25px auto 5px auto;
+	font-weight: 600;
+	letter-spacing: 1px;
+}
+.color-guide > .entry {
+	color: rgb(72, 150, 192);
+}
+
+.color-guide > .exit {
+	color: rgb(229, 82, 116);
+}
+
+.anim-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.anim-title {
+	margin-left: auto;
+}
+#rocket-link,
+#current-title,
+#monitor-link {
+	width: 33.333%;
+}
+
+#rocket-link {
+	text-align: left;
+}
+#monitor-link {
+	text-align: right;
+}
+
+#rocket-link,
+#monitor-link {
+	cursor: pointer;
+	transition: scale 0.2s ease;
+	background: linear-gradient(to right, rgb(137, 137, 224), white, rgb(137, 137, 224));
+	background-clip: text;
+	color: transparent;
+	background-size: 200% 100%;
+	animation: shimmer 4s linear infinite;
+	font-weight: bold;
+}
+#rocket-link:hover,
+#monitor-link:hover {
+	scale: 110%;
+}
+
+.current-title h2 {
+	margin: 0;
+}
+.current-title p {
+	margin: 0;
+}
+@keyframes shimmer {
+	0% {
+		background-position: -50% 0;
+	}
+	100% {
+		background-position: 150% 0;
+	}
+}

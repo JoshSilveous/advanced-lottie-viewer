@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Lottie Viewer</title>
+		<link rel="stylesheet" href="style.css" />
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+	</head>
+	<script>
+		let jsonPath = 'https://assets8.lottiefiles.com/packages/lf20_qkv8saqk.json'
+		let segments = [
+			[0, 15, 0],
+			[15, 90, 15, 0],
+		]
+		let loopAt = 1
+	</script>
+
+	<body>
+		<h1>Lottie w/ Advanced Interactivity Viewer</h1>
+		<p>
+			This tool is meant to demonstrate the power of Lottie. I created this animation with
+			Adobe Illustrator and After Effects, and I am using a custom JavaScript function that
+			allows you to define "segments" of the animation, along with different "exit points" for
+			each segment.<br /><br />
+			Go ahead and try hovering your mouse over the rocket. You'll notice that no matter when
+			you stop hovering your mouse, the animation will finish in a natural-looking way. This
+			is because I have split the animation's playback into different segments, each with a
+			different "exit" animation.
+		</p>
+		<br />
+		<div class="anim-title">
+			<div id="rocket-link" onclick="renderRocketAnim()">
+				&#9664;&ensp; Check out the <strong>Rocket</strong> animation
+			</div>
+			<div class="current-title" id="current-title">
+				<p>Try hovering your mouse over the image</p>
+			</div>
+			<div id="monitor-link" onclick="renderMonitorAnim()">
+				Check out the <strong>Monitor</strong> animation &ensp;&#9658;
+			</div>
+		</div>
+		<div class="lottie" id="lottie"></div>
+
+		<h3>
+			<label for="speed">Playback Speed (between 0.1 and 10):</label>
+			<input type="number" id="speed" name="speed" step=".1" min=".1" max="10" value="1" />
+		</h3>
+
+		<h3>
+			Frame <span id="curFrame"></span> out of <span id="totFrame"></span>, Segment
+			<span id="curSegment"></span>
+		</h3>
+		<div class="progbar" id="total">
+			<span class="progbarcomplete" id="progtotal"></span>
+		</div>
+		<div class="color-guide">
+			<div class="entry">Blue: Animation Entry</div>
+			<div class="exit">Red: Animation Exit</div>
+		</div>
+		<span id="segmentprog"></span>
+	</body>
+
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.5.3/lottie_svg.min.js"
+		type="text/javascript"
+	></script>
+	<script src="lottieAdvancedInteractive.js"></script>
+	<script>
+		function render(jsonPath, segments, loopAt) {
+			let container = document.querySelector('.lottie')
+
+			let anim = bodymovin.loadAnimation({
+				container: document.querySelector('.lottie'),
+				renderer: 'svg',
+				loop: false,
+				autoplay: false,
+				path: jsonPath,
+			})
+
+			lottieNonlinearHover(container, anim, segments, loopAt)
+
+			let thisFrame
+			let frameCount
+			let currentSegment = 0
+
+			let formSpeed = document.querySelector('#speed')
+
+			formSpeed.addEventListener('input', (e) => {
+				anim.setSpeed(formSpeed.value)
+			})
+
+			anim.addEventListener('data_ready', (e) => {
+				frameCount = anim.totalFrames
+
+				//Load bars for each segment
+				let segmentHTML = ''
+				for (let i = 0; i < segments.length; i++) {
+					// Adds segment Entry bar
+					segmentHTML =
+						segmentHTML +
+						'<span>Segment ' +
+						i +
+						'</span><div class="segprogbar" id="segment' +
+						i +
+						'"><span class="segmentprogbarcomplete" id="opengapprogsegment' +
+						i +
+						'"></span><span class="segmentprogbarcomplete" id="startgapprogsegment' +
+						i +
+						'"></span><span class="segmentprogbarcomplete" id="endgapprogsegment' +
+						i +
+						'"></span></div>'
+
+					// Adds segment Exit bar
+					segmentHTML =
+						segmentHTML +
+						'<div class="segprogbar" id="segmentexit' +
+						i +
+						'"><span class="segmentprogbarcomplete" id="opengapprogsegmentexit' +
+						i +
+						'"></span><span class="segmentprogbarcomplete" id="startgapprogsegmentexit' +
+						i +
+						'"></span><span class="segmentprogbarcomplete" id="endgapprogsegmentexit' +
+						i +
+						'"></span></div><div class="gapbar"></div> <div class="progbar" id="total"><span class="progbarcomplete" id="progtotal" style="margin-top:-25px;"></span></div>'
+				}
+				document.querySelector('#segmentprog').innerHTML = segmentHTML
+				for (let i = 0; i < segments.length; i++) {
+					// Styles segment entry bar
+					let startPct = (segments[i][0] / frameCount) * 100
+					let endPct = (segments[i][1] / frameCount) * 100
+					document.querySelector('#opengapprogsegment' + i).style =
+						'background-color: #d1d1d5; width:' + startPct + '%;'
+					document.querySelector('#startgapprogsegment' + i).style =
+						'background-color: #4896c0; width:' + (endPct - startPct) + '%;'
+					document.querySelector('#endgapprogsegment' + i).style =
+						'background-color: #d1d1d5; width:' + (100 - endPct) + '%;'
+
+					// Styles segment exit bar
+					let startPctExit = (segments[i][2] / frameCount) * 100
+					let endPctExit = (segments[i][3] / frameCount) * 100
+
+					if (segments[i].length < 4) {
+						startPctExit = (segments[i][0] / frameCount) * 100
+						endPctExit = (segments[i][1] / frameCount) * 100
+					}
+					document.querySelector('#opengapprogsegmentexit' + i).style =
+						'background-color: #d1d1d5; width:' + startPctExit + '%;'
+					document.querySelector('#startgapprogsegmentexit' + i).style =
+						'background-color: #e55274; width:' + (endPctExit - startPctExit) + '%;'
+					document.querySelector('#endgapprogsegmentexit' + i).style =
+						'background-color: #d1d1d5; width:' + (100 - endPctExit) + '%;'
+				}
+			})
+
+			anim.addEventListener('enterFrame', (e) => {
+				thisFrame = Math.round(anim.currentFrame + anim.firstFrame)
+				document.querySelector('#curFrame').innerHTML = thisFrame
+				document.querySelector('#totFrame').innerHTML = frameCount
+
+				//document.querySelector('#progtotal').style.width = ((thisFrame/frameCount)*100) + "%";
+				for (let i = 0; i < segments.length; i++) {
+					if (thisFrame >= segments[i][0] && thisFrame < segments[i][1]) {
+						document.querySelector('#curSegment').innerHTML = i
+						currentSegment = i
+					}
+				}
+
+				let progBarList = document.querySelectorAll('#progtotal')
+				for (let i = 0; i < progBarList.length; i++) {
+					progBarList[i].style.width = (thisFrame / frameCount) * 100 + '%'
+				}
+			})
+
+			container.addEventListener('mouseenter', (e) => {})
+			container.addEventListener('mouseleave', (e) => {})
+		}
+
+		function renderMonitorAnim() {
+			document.getElementById('lottie').innerHTML = ''
+			document.getElementById('monitor-link').style.visibility = 'hidden'
+			document.getElementById('rocket-link').style.visibility = ''
+
+			render(
+				'https://assets8.lottiefiles.com/packages/lf20_qkv8saqk.json',
+				[
+					[0, 15, 0],
+					[15, 90, 15, 0],
+				],
+				1
+			)
+		}
+		function renderRocketAnim() {
+			document.getElementById('lottie').innerHTML = ''
+			document.getElementById('monitor-link').style.visibility = ''
+			document.getElementById('rocket-link').style.visibility = 'hidden'
+
+			render(
+				'https://assets1.lottiefiles.com/packages/lf20_kxhwi5ie.json',
+				[
+					[0, 65, 0],
+					[65, 81, 179, 191],
+					[81, 133, 172, 191],
+					[133, 172, 172, 191],
+				],
+				3
+			)
+		}
+
+		renderRocketAnim()
+	</script>
+</html>
